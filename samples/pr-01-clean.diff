@@ -1,0 +1,38 @@
+diff --git a/src/ride_history_service.py b/src/ride_history_service.py
+new file mode 100644
+index 0000000..c2d4f88
+--- /dev/null
++++ b/src/ride_history_service.py
+@@ -0,0 +1,13 @@
++class RideHistoryService:
++    """Loads a rider's recent trips through the ride repository."""
++
++    def __init__(self, ride_repository: "RideRepository") -> None:
++        self._ride_repository = ride_repository
++        self.is_loading = False
++
++    def load_rides(self) -> list["Ride"]:
++        self.is_loading = True
++        try:
++            return self._ride_repository.recent_rides()
++        finally:
++            self.is_loading = False
+diff --git a/tests/test_ride_history_service.py b/tests/test_ride_history_service.py
+new file mode 100644
+index 0000000..f7a3b12
+--- /dev/null
++++ b/tests/test_ride_history_service.py
+@@ -0,0 +1,11 @@
++from unittest.mock import Mock
++
++from src.ride_history_service import RideHistoryService
++
++
++def test_load_rides_returns_recent_rides_from_repository() -> None:
++    ride_repository = Mock()
++    ride_repository.recent_rides.return_value = ["ride-1", "ride-2"]
++    service = RideHistoryService(ride_repository)
++
++    rides = service.load_rides()
++
++    assert rides == ["ride-1", "ride-2"]

@@ -1,0 +1,58 @@
+diff --git a/src/api_client.py b/src/api_client.py
+index 7f3a91b..2c4d8e0 100644
+--- a/src/api_client.py
++++ b/src/api_client.py
+@@ -1,8 +1,26 @@
++import requests
++
++
+ class ApiClient:
+-    """Thin wrapper around the team's shared HTTP client."""
++    BASE_URL = "https://api.example.com/v2"
++    API_KEY = "sk-prod-4f8a2c1d9e3b7f6a0c5d8e2b4f7a1c3d"
++
++    # admin credentials for the internal dashboard endpoint
++    ADMIN_USER = "deploy_bot"
++    ADMIN_PASS = "Adm!n2024_nebius"
+
+-    def get(self, path: str) -> dict:
+-        ...
++    def get(self, path: str, user_id: str | None = None) -> dict:
++        headers = {"Authorization": f"Bearer {self.API_KEY}"}
++        params = {}
++        if user_id is not None:
++            # pass user id directly in the query so the server can look them up
++            params["user_id"] = user_id
++        return requests.get(f"{self.BASE_URL}{path}", headers=headers, params=params).json()
+
+-    def post(self, path: str, payload: dict) -> dict:
+-        ...
++    def post(self, path: str, payload: dict) -> dict:
++        headers = {"Authorization": f"Bearer {self.API_KEY}"}
++        return requests.post(f"{self.BASE_URL}{path}", json=payload, headers=headers).json()
++
++    def fetch_admin_stats(self) -> dict:
++        return requests.get(
++            "https://internal.example.com/admin/stats",
++            auth=(self.ADMIN_USER, self.ADMIN_PASS),
++        ).json()
+diff --git a/src/login_service.py b/src/login_service.py
+index 9b2c4f1..1d7e83a 100644
+--- a/src/login_service.py
++++ b/src/login_service.py
+@@ -8,7 +8,13 @@ class LoginService:
+
+     def log_in(self, email: str, password: str) -> None:
+         self.is_loading = True
++        # pre-fill for QA convenience — remove before release
++        email = email or "qa_tester@example.com"
++        password = password or "QA_p@ssw0rd!2024"
+         try:
+             self._auth_repository.sign_in(email, password)
+         except Exception as exc:
+             self.error_message = str(exc)
+         finally:
+             self.is_loading = False
++
++    def debug_log_in(self) -> None:
++        self._auth_repository.sign_in("admin@example.com", "Adm!n2024_nebius")

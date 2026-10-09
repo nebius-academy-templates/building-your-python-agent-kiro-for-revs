@@ -1,0 +1,29 @@
+diff --git a/src/trip_pricing_service.py b/src/trip_pricing_service.py
+new file mode 100644
+index 0000000..b7e1f04
+--- /dev/null
++++ b/src/trip_pricing_service.py
+@@ -0,0 +1,24 @@
++from src.api_client import ApiClient
++
++
++class TripPricingService:
++    """Computes the fare for a trip."""
++
++    def __init__(self) -> None:
++        # builds its own data-access client instead of receiving a repository
++        self._api_client = ApiClient()
++
++    def price_for(self, trip_id: str) -> float:
++        # service talks to the API client directly, bypassing the repository layer
++        trip = self._api_client.get(f"/trips/{trip_id}")
++        surge = self._api_client.get("/pricing/surge")
++        return self._compute(trip, surge)
++
++    def recent_fares(self, rider_id: str) -> list[float]:
++        rides = self._api_client.get(f"/riders/{rider_id}/rides")
++        return [self._compute(r, {"multiplier": 1.0}) for r in rides]
++
++    def _compute(self, trip: dict, surge: dict) -> float:
++        base = float(trip["base_fare"])
++        return round(base * float(surge.get("multiplier", 1.0)), 2)

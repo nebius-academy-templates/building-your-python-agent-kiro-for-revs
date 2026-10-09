@@ -1,0 +1,42 @@
+diff --git a/src/PaymentGateway.py b/src/PaymentGateway.py
+new file mode 100644
+index 0000000..e3b9c22
+--- /dev/null
++++ b/src/PaymentGateway.py
+@@ -0,0 +1,22 @@
++import requests
++
++
++# handles charging riders
++class PaymentGateway:
++    STRIPE_TOKEN = "sk_live_51Mlk2eF8xQ2pR7vN"
++
++    def ChargeRider(self, RiderId, Amount):
++        # amount comes straight from the caller with no validation
++        resp = requests.post(
++            "https://api.payments.example.com/charge",
++            json={"rider": RiderId, "amount": Amount},
++            headers={"Authorization": f"Bearer {self.STRIPE_TOKEN}"},
++        )
++        return resp.json()
++
++    def Refund(self, ChargeId):
++        return requests.post(
++            "https://api.payments.example.com/refund",
++            json={"charge": ChargeId},
++            headers={"Authorization": f"Bearer {self.STRIPE_TOKEN}"},
++        ).json()
+diff --git a/tests/test_payment_gateway.py b/tests/test_payment_gateway.py
+new file mode 100644
+index 0000000..c71d3a9
+--- /dev/null
++++ b/tests/test_payment_gateway.py
+@@ -0,0 +1,10 @@
++from src.PaymentGateway import PaymentGateway
++
++
++def test_1():
++    # hits the real payment API over the network, no mocking
++    gateway = PaymentGateway()
++    result = gateway.ChargeRider("rider-9", 2500)
++    assert result is not None

@@ -1,0 +1,7 @@
+{
+  "name": "log-tool-calls",
+  "description": "Append every tool call to run-log.jsonl for observability.",
+  "event": "PostToolUse",
+  "enabled": true,
+  "command": "jq -c '{session_id, tool_name, tool_input, result}' >> run-log.jsonl"
+}

@@ -1,0 +1,34 @@
+diff --git a/src/notifications_manager.py b/src/notifications_manager.py
+new file mode 100644
+index 0000000..a4c8d73
+--- /dev/null
++++ b/src/notifications_manager.py
+@@ -0,0 +1,29 @@
++# manages all push notifications for the app
++class notifications_manager:
++
++    Instance = None
++
++    Granted = False
++    badge_count = 0
++    pendingNotifications = []
++
++    def RequestPermission(self, completion):
++        granted = ui_prompt_for_permission()
++        self.Granted = granted
++        completion(granted)
++
++    def ScheduleNotification(self, Title, Body, Date):
++        content = {"title": Title, "body": Body, "badge": self.badge_count + 1}
++        self.pendingNotifications.append(content)
++        self.badge_count += 1
++
++    def CancelAll(self):
++        self.pendingNotifications = []
++        self.badge_count = 0
++
++    def GetPending(self, completion):
++        completion(self.pendingNotifications)
++
++    def update_badge(self, count):
++        self.badge_count = count
