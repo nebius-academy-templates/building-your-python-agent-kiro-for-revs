@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "tool-timer-stop",
+      "description": "After each tool call, append a timestamped 'stop' line to tool-timings.jsonl. Each tool call now has a start and a stop record; compute its duration by subtracting the matching start ts from the stop ts (for example with jq), then take the slowest per session for the observability table.",
+      "trigger": "PostToolUse",
+      "action": {
+        "type": "command",
+        "command": "jq -c '{phase:\"stop\", ts:(now), session_id, tool_name}' >> tool-timings.jsonl"
+      },
+      "enabled": true
+    }
+  ]
+}

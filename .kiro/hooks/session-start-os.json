@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "session-start-os",
+      "description": "At session start, run `uname -sr` and inject the operating system family and version into the agent's context so it uses the right shell and package-manager syntax without asking.",
+      "trigger": "SessionStart",
+      "action": {
+        "type": "command",
+        "command": "echo \"Operating system: $(uname -sr)\""
+      },
+      "enabled": true
+    }
+  ]
+}

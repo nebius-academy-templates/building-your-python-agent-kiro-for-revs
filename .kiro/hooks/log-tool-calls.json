@@ -1,7 +1,15 @@
 {
-  "name": "log-tool-calls",
-  "description": "Append every tool call to run-log.jsonl for observability.",
-  "event": "PostToolUse",
-  "enabled": true,
-  "command": "jq -c '{session_id, tool_name, tool_input, result}' >> run-log.jsonl"
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "log-tool-calls",
+      "description": "Append every tool call to run-log.jsonl for observability.",
+      "trigger": "PostToolUse",
+      "action": {
+        "type": "command",
+        "command": "jq -c '{session_id, tool_name, tool_input, result}' >> run-log.jsonl"
+      },
+      "enabled": true
+    }
+  ]
 }

@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "tool-timer-start",
+      "description": "Before each tool call, append a timestamped 'start' line to tool-timings.jsonl. Pairs with tool-timer-stop: each tool call produces a start and a stop record for the same session_id and tool_name, and you compute the duration by subtracting the start timestamp from the stop timestamp.",
+      "trigger": "PreToolUse",
+      "action": {
+        "type": "command",
+        "command": "jq -c '{phase:\"start\", ts:(now), session_id, tool_name}' >> tool-timings.jsonl"
+      },
+      "enabled": true
+    }
+  ]
+}

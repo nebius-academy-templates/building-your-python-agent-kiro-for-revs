@@ -18,7 +18,7 @@ source; the guidelines skill points to them.
 
 For each finding, output one line as:
 
-`[HIGH]` or `[LOW]` — <file> — <the violation> — violates <ADR-00N: name>
+`[HIGH]`, `[MEDIUM]`, or `[LOW]` — <file> — <the violation> — violates <ADR-00N: name>
 
 Common cases:
 

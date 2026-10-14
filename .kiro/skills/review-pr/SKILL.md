@@ -11,7 +11,9 @@ This workflow runs the full pull-request review. It is triggered explicitly with
 ## Steps
 
 1. **Fetch the PR via GitHub MCP.** Use the GitHub MCP server (`get_pull_request`) to load
-   the diff for the requested PR number.
+   the diff for the requested PR number from the shared practice repo
+   `nebius-academy-templates/python-pr-review-practice` (not the learner's own repo), so
+   `/review-pr 1` resolves against the practice repo's PRs.
 2. **Delegate to the review sub-agents.** Hand the diff to each specialist sub-agent:
    - `style-reviewer` — applies **app-conventions** to non-test files and
      **test-conventions** to test files.

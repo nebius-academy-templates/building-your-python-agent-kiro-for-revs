@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "guard-test-writes",
+      "description": "Block any write under tests/ during a review. The matcher fires on the write tool; the command reads the tool event on stdin and exits non-zero when the target path is inside tests/, which blocks the write. Writes to any other path pass through.",
+      "trigger": "PreToolUse",
+      "matcher": "fsWrite",
+      "action": {
+        "type": "command",
+        "command": "path=$(jq -r '.tool_input.path // .tool_input.file_path // empty'); case \"$path\" in tests/*|*/tests/*) echo \"Blocked: writes under tests/ are not allowed during a review ($path).\" >&2; exit 1;; *) exit 0;; esac"
+      },
+      "enabled": true
+    }
+  ]
+}
